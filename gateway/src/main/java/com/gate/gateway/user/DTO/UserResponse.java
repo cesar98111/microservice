@@ -7,8 +7,8 @@ import com.gate.gateway.user.entity.UserRole;
 import java.util.Set;
 
 public class UserResponse {
-    private String id;
-    private String name;
+    protected String id;
+    protected String name;
 
 
     public UserResponse(String id, String name) {

@@ -1,6 +1,6 @@
-package com.gate.gateway.security.jwt;
+package com.productos.product.security.jwt;
 
-import com.gate.gateway.user.entity.User;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -16,11 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class JwtProvider {
@@ -39,6 +37,7 @@ public class JwtProvider {
 
     private SecretKey secretKey;
 
+
     @PostConstruct
     public void init(){
         secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
@@ -47,30 +46,13 @@ public class JwtProvider {
 
     }
 
-    public String generateToken(Authentication authentication){
-        User user = (User) authentication.getPrincipal();
-        Date tokenExpirationDateTime = Date.from(
-                LocalDateTime.now().plusDays(jwtLifeInDays)
-                        .atZone(ZoneId.systemDefault())
-                        .toInstant()
-        );
-
-        return Jwts.builder()
-                .setHeaderParam("typ", TOKEN_TYPE)
-                .setSubject(user.getId().toString())
-                .setIssuedAt(new Date())
-                .setExpiration(tokenExpirationDateTime)
-                .signWith(secretKey)
-                .compact();
-    }
 
     public boolean validateToken(String token){
-        log.info(token);
         try{
             jwtParser.parseClaimsJws(token);
             return true;
         }catch (SignatureException | MalformedKeyException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex){
-            log.info("token no soportado: "+ex);
+            log.info("token no soportado");
         }
         return false;
 
